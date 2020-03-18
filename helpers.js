@@ -949,7 +949,7 @@ exports.kodiMuteToggle = (request, response) => { // eslint-disable-line no-unus
     });
 };
 
-const setVolume = (Kodi, volume) => {
+const setVolume = (Kodi, volume) => { // eslint-disable-line no-unused-vars
     let validVolume = Math.min(parseInt(volume), 100);
 
     validVolume = Math.max(validVolume, 0);
@@ -960,10 +960,12 @@ const setVolume = (Kodi, volume) => {
 };
 
 const fadeVolume = (Kodi, newVolume, oldVolume) => { // eslint-disable-line no-unused-vars
-    var up = (newVolume-oldVolume > 0) ? true : false;    
-    var currentVolume = oldVolume;
+    let up = (newVolume - oldVolume; > 0) ? true : false; // eslint-disable-line no-unneeded-ternary
+    let currentVolume = oldVolume;
     
-    if (newVolume-oldVolume === 0) return false;
+    if (newVolume - oldVolume === 0) {
+        return false;
+    }
     
     console.log('Fading volume from ' + oldVolume + ' to ' + newVolume + '...');
 
@@ -972,10 +974,10 @@ const fadeVolume = (Kodi, newVolume, oldVolume) => { // eslint-disable-line no-u
         setTimeout(function() {
             if (up) {
                 currentVolume++;
-            } else{
+            } else {
                 currentVolume--;
             }
-            if (currentVolume != newVolume)
+            if (currentVolume !== newVolume)
             {
                 changeVol();
             }
@@ -984,8 +986,8 @@ const fadeVolume = (Kodi, newVolume, oldVolume) => { // eslint-disable-line no-u
                 'volume': currentVolume
             });
             
-            console.log('Vol: ' + currentVolume);          
-        }, 50);
+            console.log('Vol: ' + currentVolume);
+        }, 50)
     };
     changeVol();
     
@@ -1439,7 +1441,7 @@ const togglePartyMode = (kodi, playerid) => {
         partymode: 'toggle'
     }).then(() => kodi.GUI.SetFullscreen({ // eslint-disable-line new-cap
         fullscreen: true
-    }));;
+    }));
 };
 
 exports.kodiTogglePartymode = (request) => {
