@@ -969,7 +969,7 @@ const fadeVolume = (Kodi, newVolume, oldVolume) => { // eslint-disable-line no-u
     
     console.log('Fading volume from ${oldVolume} to ${newVolume}...');
 
-    changeVol(function() {
+    var changeVol = function() {
         setTimeout(function() {
             if (up) {
                 currentVolume++;
@@ -986,7 +986,7 @@ const fadeVolume = (Kodi, newVolume, oldVolume) => { // eslint-disable-line no-u
             
             console.log('Vol: ${currentVolume}');
         }, 50);
-    });
+    };
     
     changeVol();
     
