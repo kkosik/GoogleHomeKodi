@@ -959,12 +959,69 @@ const setVolume = (Kodi, volume) => {
     });
 };
 
+const fadeVolume = (request, response) => { // eslint-disable-line no-unused-vars
+      let setVolume = request.query.q.trim();
+
+      let Kodi = request.kodi;
+
+      Kodi.Application.GetProperties({
+        'properties': ['volume', 'muted']
+      }).then((data) => {
+        console.log(data.result.volume);
+
+      if (request.query.d != undefined) {
+        let direction = request.query.d.trim();
+
+        if (direction != '') {
+          console.log('Incremental adjustment "' + direction + '" by "' + setVolume + '" to "' + parseInt(parseInt(data.result.volume) + parseInt(setVolume)) + '"');
+          if (direction == 'up') {
+            setVolume = parseInt(data.result.volume) + parseInt(setVolume);
+            if (setVolume >= 100) setVolume = 100;
+          }        
+          if (direction == 'down') {
+            setVolume = parseInt(data.result.volume) - parseInt(setVolume);
+            if (setVolume <= 0) setVolume = 0;
+          }
+        }
+      }
+      
+      if (data.result.volume-setVolume == 0) return;
+      
+      console.log('Fading volume from ' + data.result.volume + ' to ' + setVolume);
+            
+      var i = data.result.volume;
+      var up = (data.result.volume-setVolume < 0) ? true : false;
+      function changeVol() {
+        setTimeout(function() {       
+          
+          if (up) {
+            i++;
+          } else {
+            i--;
+          }
+          if (i != setVolume) {
+            changeVol();
+          }
+          
+          Kodi.Application.SetVolume({ // eslint-disable-line new-cap
+            'volume': i
+          });
+          console.log('Vol: ' + i);
+          
+        }, 50);
+      };
+      changeVol();
+    });
+    response.sendStatus(200);
+};
+
 exports.kodiSetVolume = (request, response) => { // eslint-disable-line no-unused-vars
     const requestedVolume = getRequestedNumberOrDefaulValue(request, 50);
     let Kodi = request.kodi;
 
     console.log(`set volume to "${requestedVolume}" percent request received`);
-    return setVolume(Kodi, requestedVolume);
+    // return setVolume(Kodi, requestedVolume);
+    return fadeVolume(Kodi, requestedVolume);
 };
 
 exports.kodiIncreaseVolume = (request, response) => { // eslint-disable-line no-unused-vars
@@ -977,7 +1034,8 @@ exports.kodiIncreaseVolume = (request, response) => { // eslint-disable-line no-
     }).then((result) => {
         let oldVolume = parseInt(result.result.volume);
 
-        setVolume(Kodi, oldVolume + delta);
+        // setVolume(Kodi, oldVolume + delta);
+        fadeVolume(Kodi, oldVolume + delta);
     });
 };
 
@@ -991,7 +1049,8 @@ exports.kodiDecreaseVolume = (request, response) => { // eslint-disable-line no-
     }).then((result) => {
         let oldVolume = parseInt(result.result.volume);
 
-        setVolume(Kodi, oldVolume - delta);
+        // setVolume(Kodi, oldVolume - delta);
+        fadeVolume(Kodi, oldVolume - delta);
     });
 };
 
