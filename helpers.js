@@ -959,60 +959,37 @@ const setVolume = (Kodi, volume) => {
     });
 };
 
-const fadeVolume = (request, response) => { // eslint-disable-line no-unused-vars
-      let setVolume = request.query.q.trim();
+const fadeVolume = (Kodi, newVolume, oldVolume) => { // eslint-disable-line no-unused-vars
+    var up = (newVolume-oldVolume > 0) ? true : false;
+    
+    if (newVolume-oldVolume === 0) return false;
+    
+    console.log('Fading volume from ' + oldVolume + ' to ' + newVolume + '...');
 
-      let Kodi = request.kodi;
+    var i = data.result.volume;
+    function changeVol()
+    {
+        setTimeout(function() {
+            if (up) {
+                i++;
+            } else{
+                i--;
+            }
+            if (i != newVolume)
+            {
+                changeVol();
+            }
 
-      Kodi.Application.GetProperties({
-        'properties': ['volume', 'muted']
-      }).then((data) => {
-        console.log(data.result.volume);
-
-      if (request.query.d != undefined) {
-        let direction = request.query.d.trim();
-
-        if (direction != '') {
-          console.log('Incremental adjustment "' + direction + '" by "' + setVolume + '" to "' + parseInt(parseInt(data.result.volume) + parseInt(setVolume)) + '"');
-          if (direction == 'up') {
-            setVolume = parseInt(data.result.volume) + parseInt(setVolume);
-            if (setVolume >= 100) setVolume = 100;
-          }        
-          if (direction == 'down') {
-            setVolume = parseInt(data.result.volume) - parseInt(setVolume);
-            if (setVolume <= 0) setVolume = 0;
-          }
-        }
-      }
-      
-      if (data.result.volume-setVolume == 0) return;
-      
-      console.log('Fading volume from ' + data.result.volume + ' to ' + setVolume);
+            Kodi.Application.SetVolume({ // eslint-disable-line new-cap
+                'volume': i
+            });
             
-      var i = data.result.volume;
-      var up = (data.result.volume-setVolume < 0) ? true : false;
-      function changeVol() {
-        setTimeout(function() {       
-          
-          if (up) {
-            i++;
-          } else {
-            i--;
-          }
-          if (i != setVolume) {
-            changeVol();
-          }
-          
-          Kodi.Application.SetVolume({ // eslint-disable-line new-cap
-            'volume': i
-          });
-          console.log('Vol: ' + i);
-          
+            console.log('Vol: ' + i);          
         }, 50);
-      };
-      changeVol();
-    });
-    response.sendStatus(200);
+    };
+    changeVol();
+    
+    return true;
 };
 
 exports.kodiSetVolume = (request, response) => { // eslint-disable-line no-unused-vars
@@ -1021,7 +998,14 @@ exports.kodiSetVolume = (request, response) => { // eslint-disable-line no-unuse
 
     console.log(`set volume to "${requestedVolume}" percent request received`);
     // return setVolume(Kodi, requestedVolume);
-    return fadeVolume(Kodi, requestedVolume);
+    return Kodi.Application.GetProperties({ // eslint-disable-line new-cap
+        properties: ['volume']
+    }).then((result) => {
+        let oldVolume = parseInt(result.result.volume);
+
+        // setVolume(Kodi, oldVolume + delta);
+        fadeVolume(Kodi, requestedVolume, oldVolume);
+    });
 };
 
 exports.kodiIncreaseVolume = (request, response) => { // eslint-disable-line no-unused-vars
@@ -1035,7 +1019,7 @@ exports.kodiIncreaseVolume = (request, response) => { // eslint-disable-line no-
         let oldVolume = parseInt(result.result.volume);
 
         // setVolume(Kodi, oldVolume + delta);
-        fadeVolume(Kodi, oldVolume + delta);
+        fadeVolume(Kodi, oldVolume + delta, oldVolume);
     });
 };
 
@@ -1050,7 +1034,7 @@ exports.kodiDecreaseVolume = (request, response) => { // eslint-disable-line no-
         let oldVolume = parseInt(result.result.volume);
 
         // setVolume(Kodi, oldVolume - delta);
-        fadeVolume(Kodi, oldVolume - delta);
+        fadeVolume(Kodi, oldVolume - delta, oldVolume);
     });
 };
 
