@@ -960,31 +960,31 @@ const setVolume = (Kodi, volume) => {
 };
 
 const fadeVolume = (Kodi, newVolume, oldVolume) => { // eslint-disable-line no-unused-vars
-    var up = (newVolume-oldVolume > 0) ? true : false;
+    var up = (newVolume-oldVolume > 0) ? true : false;    
+    var currentVolume = oldVolume;
     
     if (newVolume-oldVolume === 0) return false;
     
     console.log('Fading volume from ' + oldVolume + ' to ' + newVolume + '...');
 
-    var i = data.result.volume;
     function changeVol()
     {
         setTimeout(function() {
             if (up) {
-                i++;
+                currentVolume++;
             } else{
-                i--;
+                currentVolume--;
             }
-            if (i != newVolume)
+            if (currentVolume != newVolume)
             {
                 changeVol();
             }
 
             Kodi.Application.SetVolume({ // eslint-disable-line new-cap
-                'volume': i
+                'volume': currentVolume
             });
             
-            console.log('Vol: ' + i);          
+            console.log('Vol: ' + currentVolume);          
         }, 50);
     };
     changeVol();
