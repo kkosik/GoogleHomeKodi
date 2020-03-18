@@ -240,11 +240,11 @@ app.all('/setaudiodirect', exec(Helper.kodiSetAudioDirect));
 // Go to x minutes
 app.all('/seektominutes', exec(Helper.kodiSeektominutes));
 
-//Bug when seeking forward less than 60 seconds in kodi json https://forum.kodi.tv/showthread.php?tid=237408
-//Seek forward x seconds
+// Bug when seeking forward less than 60 seconds in kodi json https://forum.kodi.tv/showthread.php?tid=237408
+// Seek forward x seconds
 app.all('/seekforwardseconds', exec(Helper.kodiSeekForwardSeconds));
 
-//Seek backward x seconds
+// Seek backward x seconds
 app.all('/seekbackwardseconds', exec(Helper.kodiSeekBackwardSeconds));
 
 // Seek forward x minutes
