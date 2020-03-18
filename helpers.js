@@ -1441,8 +1441,8 @@ const togglePartyMode = (kodi, playerid) => {
     }).then(() => setTimeout(function() {
             kodi.GUI.SetFullscreen({ // eslint-disable-line new-cap
                 fullscreen: true
-            });
-        }, 3000);
+            })
+        }, 3000)
     });
 
 exports.kodiTogglePartymode = (request) => {
