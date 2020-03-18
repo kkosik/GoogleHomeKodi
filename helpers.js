@@ -960,14 +960,14 @@ const setVolume = (Kodi, volume) => { // eslint-disable-line no-unused-vars
 };
 
 const fadeVolume = (Kodi, newVolume, oldVolume) => { // eslint-disable-line no-unused-vars
-    let up = (newVolume - oldVolume; > 0) ? true : false; // eslint-disable-line no-unneeded-ternary
+    let up = (newVolume - oldVolume > 0) ? true : false; // eslint-disable-line no-unneeded-ternary
     let currentVolume = oldVolume;
     
     if (newVolume - oldVolume === 0) {
         return false;
     }
     
-    console.log('Fading volume from ' + oldVolume + ' to ' + newVolume + '...');
+    console.log('Fading volume from ${oldVolume} to ${newVolume}...');
 
     function changeVol()
     {
@@ -986,7 +986,7 @@ const fadeVolume = (Kodi, newVolume, oldVolume) => { // eslint-disable-line no-u
                 'volume': currentVolume
             });
             
-            console.log('Vol: ' + currentVolume);
+            console.log('Vol: ${currentVolume}');
         }, 50)
     };
     changeVol();
