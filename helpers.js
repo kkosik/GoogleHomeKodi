@@ -796,6 +796,30 @@ exports.kodiSeektominutes = (request, response) => { // eslint-disable-line no-u
     });
 };
 
+// Seek x seconds forwards
+exports.kodiSeekForwardSeconds = (request, response) => { // eslint-disable-line no-unused-vars
+    console.log('Seek x seconds forwards request received');
+    let Kodi = request.kodi;
+
+    const seekForwardseconds = getRequestedNumberOrDefaulValue(request, 1);
+
+    return kodiSeek(Kodi, {
+        seconds: parseInt(seekForwardseconds)
+    });
+};
+
+// Seek x minutes backwards
+exports.kodiSeekBackwardSeconds = (request, response) => { // eslint-disable-line no-unused-vars
+    console.log('Seek x seconds backward request received');
+    let Kodi = request.kodi;
+
+    const seekbackwardSeconds = getRequestedNumberOrDefaulValue(request, 1);
+
+    return kodiSeek(Kodi, {
+        seconds: parseInt(-seekbackwardSeconds)
+    });
+};
+
 // Seek x minutes forwards
 exports.kodiSeekForwardMinutes = (request, response) => { // eslint-disable-line no-unused-vars
     console.log('Seek x minutes forwards request received');
