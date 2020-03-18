@@ -1438,13 +1438,12 @@ const togglePartyMode = (kodi, playerid) => {
     return kodi.Player.SetPartymode({ // eslint-disable-line new-cap
         playerid: playerid,
         partymode: 'toggle'
-    }).then(() => {
-        setTimeout(function() {
+    }).then(() => setTimeout(function() {
             kodi.GUI.SetFullscreen({ // eslint-disable-line new-cap
                 fullscreen: true
             });
         }, 3000);
-    };
+    });
 
 exports.kodiTogglePartymode = (request) => {
     let kodi = request.kodi;
