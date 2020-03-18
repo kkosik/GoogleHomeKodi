@@ -1442,7 +1442,7 @@ const togglePartyMode = (kodi, playerid) => {
         setTimeout(function() {
             kodi.GUI.SetFullscreen({ // eslint-disable-line new-cap
                 fullscreen: true
-        });
+        }, 3000);
     });
 };
 
