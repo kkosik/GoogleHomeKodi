@@ -1436,7 +1436,7 @@ exports.kodiExecuteAddon = (request) => {
 
 const togglePartyMode = (kodi, playerid) => {
     return kodi.Player.SetPartymode({ // eslint-disable-line new-cap
-    playerid: playerid,
+        playerid: playerid,
         partymode: 'toggle'
     }).then(() => setTimeout(function() {
         kodi.GUI.SetFullscreen({ // eslint-disable-line new-cap
